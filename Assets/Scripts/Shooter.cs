@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Shooter : MonoBehaviour
 {
+    public CandyManager candyManager;
     public GameObject[] candyPrefabs;
     public Transform candyParentTransform;
     public float shotForce;
@@ -13,7 +14,8 @@ public class Shooter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //TODO: Directorに移動
+        Application.targetFrameRate = 60;
     }
 
     // Update is called once per frame
@@ -27,12 +29,16 @@ public class Shooter : MonoBehaviour
 
     void Shoot()
     {
+        if (candyManager.Candy <= 0) return;
+
         GameObject candy = Instantiate(SampleCandy(), GetInstantiatePosition(), Quaternion.identity);
         candy.transform.parent = candyParentTransform;
 
         Rigidbody rb = candy.GetComponent<Rigidbody>();
         rb.AddForce(transform.forward * shotForce);
         rb.AddTorque(new Vector3(0, shotTorque, 0));
+
+        candyManager.ConsumeCandy();
     }
 
     GameObject SampleCandy()
